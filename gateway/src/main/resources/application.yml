@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: usuario_route
+          uri: lb://usuario
+          predicates:
+            - Path=/usuario/**
+          filters:
+            - RewritePath=/usuario/(?<path>.*), /api/$\{path}
+            - PreserveHostHeader
+        - id: faturamento_route
+          uri: lb://faturamento
+          predicates:
+            - Path=/faturamento/**
+          filters:
+            - RewritePath=/faturamento/(?<path>.*), /api/$\{path}
+            - PreserveHostHeader
+
+server:
+  port: 80
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:admin@localhost:8761/eureka/
